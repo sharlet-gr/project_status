@@ -15,7 +15,7 @@ const employeeSchema = new mongoose.Schema({
 	role: {
 		type: String,
 		required: true,
-		enum: ['Admin', 'Manager', 'Employee', 'admin', 'manager', 'employee']
+		enum: ['Admin', 'Manager', 'Employee']
 	},
 	projects: [Project],
 	manager: {
