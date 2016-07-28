@@ -4,8 +4,9 @@ let Project = mongoose.model('Project');
 const employeeSchema = new mongoose.Schema({
 	name: {
 		type: String,
-		required: true
 	},
+	googleId: String,
+	googleToken: String,
 	emailId: {
 		type: String,
 		required: true,
@@ -13,7 +14,8 @@ const employeeSchema = new mongoose.Schema({
 	},
 	role: {
 		type: String,
-		required: true
+		required: true,
+		enum: ['Admin', 'Manager', 'Employee', 'admin', 'manager', 'employee']
 	},
 	projects: [Project],
 	manager: {
