@@ -1,6 +1,4 @@
 import mongoose from 'mongoose';
-require('./project');
-let Project = mongoose.model('Project');
 const employeeSchema = new mongoose.Schema({
 	name: {
 		type: String,
@@ -17,7 +15,10 @@ const employeeSchema = new mongoose.Schema({
 		required: true,
 		enum: ['Admin', 'Manager', 'Employee']
 	},
-	projects: [Project],
+	projects: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Project'
+	}],
 	manager: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Employee'
