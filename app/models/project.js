@@ -6,13 +6,15 @@ const projectSchema = new mongoose.Schema({
 		unique: true
 	},
 	clients: [String],
-	managers: [{
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Employee'
-	}],
-	employees: [{
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Employee'
+	members: [{
+		person: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Employee'
+		},
+		role: {
+			type: String,
+			enum: ['Manager', 'Employee']
+		}
 	}]
 });
 

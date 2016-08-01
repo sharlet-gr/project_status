@@ -10,23 +10,10 @@ const employeeSchema = new mongoose.Schema({
 		required: true,
 		unique: true
 	},
-	role: {
-		type: String,
-		required: true,
-		enum: ['Admin', 'Manager', 'Employee']
-	},
-	projects: [{
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Project'
-	}],
-	manager: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Employee'
-	},
-	subOrdinates: [{
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Employee'
-	}]
+	admin: {
+		type: Boolean,
+		default: false
+	}
 });
 
 mongoose.model('Employee', employeeSchema);
