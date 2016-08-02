@@ -13,7 +13,11 @@ const employeeSchema = new mongoose.Schema({
 	admin: {
 		type: Boolean,
 		default: false
-	}
+	},
+	projects: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Project'
+	}]
 });
 
 mongoose.model('Employee', employeeSchema);
