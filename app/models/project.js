@@ -7,6 +7,7 @@ const projectSchema = new mongoose.Schema({
 	},
 	clients: [String],
 	members: [{
+		_id: false,
 		person: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'Employee'
