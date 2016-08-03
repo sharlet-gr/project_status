@@ -1,4 +1,4 @@
-let mongoose=require('mongoose');
+import mongoose from 'mongoose';
 require('../models/project');
 let Project = mongoose.model('Project');
 require('../models/employee');
@@ -76,18 +76,18 @@ module.exports = (app, passport) => {
 				if(req.body.clients!=project.clients)
 					project.clients = req.body.clients;
 			}
-			//If managers are modified (list of managers is an array)
+			//If members are modified (list of members and roles are two different arrays)
 			if(req.body.members!=undefined){
-				//Remove project from employee model for managers that have been removed
-				
 				let length = project.members.length;
 				for(let i=0; i<length; i++){
 					if(!checkAvailability(req.body.members, project.members[i].person.toString())){
+						//Remove project from employee model for members that have been removed
 						Employee.update({_id: project.members[i].person}, 
 							{$pull: {projects: project._id}}, (err) => {
 							if(err)
 								return(err);
 						});	
+						//Remove member from project model for members that have been removed
 						Project.update({_id: req.params.projectId},
 							{$pull: {members: {person: project.members[i].person}}}, 
 							(err) => {
@@ -97,7 +97,7 @@ module.exports = (app, passport) => {
 					}
 				}
 				length = req.body.members.length;
-				//Save project in project and employee model for managers
+				//Save project in project and employee model for members
 				for(let i=0; i<length; i++){
 					let member = {person: req.body.members[i], role: req.body.role[i]};
 					Project.findByIdAndUpdate(req.params.projectId, 
@@ -105,6 +105,8 @@ module.exports = (app, passport) => {
 							if(err)
 								return(err);
 							for(let i=0; i<project.members.length; i++){
+								//Condition to check whether the member existed in project with a different role
+								//If so, remove that document from project model
 								if(project.members[i].person == member.person && project.members[i].role != member.role){	
 									Project.findByIdAndUpdate(req.params.projectId, 
 										{$pull: {members: project.members[i]}},(err, project) => {
@@ -122,6 +124,21 @@ module.exports = (app, passport) => {
 					});
 				}
 			}
+			else{
+				let length = project.members.length;
+				for(let i=0; i<length; i++){
+					//Remove project from employee model for members that have been removed
+					Employee.update({_id: project.members[i].person}, 
+						{$pull: {projects: project._id}}, (err) => {
+						if(err)
+							return(err);
+					});	
+				}
+				Project.update({_id: req.params.projectId}, {$set: {members: []}}, (err) => {
+					if(err)
+						return (err);
+				});
+			}
 			project.save();
 			res.json("Updation successful");	
 		});
@@ -131,7 +148,7 @@ module.exports = (app, passport) => {
 	app.delete('/projects/:projectId', (req,res) => {
 		
 		//Perform deletion only if user is an admin
-		Project.remove({_id: req.params.projectId}, (err, obj) => {
+		Project.remove({_id: req.params.projectId}, (err) => {
 			if(err)
 				return res.json(err);
 			
