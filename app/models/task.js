@@ -12,6 +12,7 @@ const taskSchema = new mongoose.Schema({
 	inTime: String,
 	outTime: String,
 	breakTime: String,
+	workHours: String,
 	projects: [{
 		project: {
 			type: mongoose.Schema.Types.ObjectId,

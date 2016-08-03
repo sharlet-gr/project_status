@@ -1,19 +1,19 @@
-let mongoose=require('mongoose');
+import mongoose from 'mongoose';
 let GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 require('../app/models/employee');
 let Employee = mongoose.model('Employee');
-var configAuth = require('./auth');
+let configAuth = require('./auth');
 
 module.exports = (passport) => {
 
 	// used to serialize the user for the session
-    passport.serializeUser(function(user, done) {
+    passport.serializeUser((user, done) => {
         done(null, user.id);
     });
 
     // used to deserialize the user
-    passport.deserializeUser(function(id, done) {
-        Employee.findById(id, function(err, user) {
+    passport.deserializeUser((id, done) => {
+        Employee.findById(id, (err, user) => {
             done(err, user);
         });
     });
@@ -25,14 +25,14 @@ module.exports = (passport) => {
         callbackURL     : configAuth.googleAuth.callbackURL,
 
     },
-    function(token, refreshToken, profile, done) {
+    (token, refreshToken, profile, done) => {
 
         // make the code asynchronous
         // Employee.findOne won't fire until we have all our data back from Google
-        process.nextTick(function() {
+        process.nextTick(() => {
 
             // try to find the user based on their google id
-            Employee.findOne({ 'emailId' : profile.emails[0].value}, function(err, user) {
+            Employee.findOne({ 'emailId' : profile.emails[0].value},(err, user) => {
                 if (err)
                     return done(err);
 

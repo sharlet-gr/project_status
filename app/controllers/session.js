@@ -20,12 +20,12 @@ module.exports = (app, passport)=> {
     );
 
    	// route for showing the profile page
-    app.get('/profile', isLoggedIn, function(req, res) {
+    app.get('/profile', isLoggedIn, (req, res) => {
         res.json(req.user);
     });
 
     // route for logging out
-    app.get('/logout', function(req, res) {
+    app.get('/logout', (req, res) => {
         req.logout();
         res.redirect('/');
     });
