@@ -1,4 +1,4 @@
-let mongoose=require('mongoose');
+import mongoose from 'mongoose';
 require('../models/employee');
 let Employee = mongoose.model('Employee');
 require('../models/project');
